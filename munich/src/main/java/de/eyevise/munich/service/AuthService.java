@@ -19,9 +19,14 @@ public class AuthService {
     private JwtService jwtService;
 
     public String saveUser(UserCredential credential) {
-        credential.setPassword(passwordEncoder.encode(credential.getPassword()));
-        repository.save(credential);
-        return "user added to the system";
+        try {
+            credential.setPassword(passwordEncoder.encode(credential.getPassword()));
+            repository.save(credential);
+            return "user added to the system";
+        }catch (Exception e){
+            throw new RuntimeException("Server error SaveUser");
+        }
+
     }
 
     public String generateToken(String username) {

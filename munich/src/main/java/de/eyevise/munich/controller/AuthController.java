@@ -4,6 +4,7 @@ import de.eyevise.munich.dto.AuthRequestDto;
 import de.eyevise.munich.entity.UserCredential;
 import de.eyevise.munich.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,13 +36,14 @@ public class AuthController {
 
     }
 
-    @GetMapping("/validate/{token}")
-    public String validateToken(@PathVariable String token){
+    @GetMapping("/validate")
+    public String validateToken(@RequestHeader String token){
 
         authService.validateToken(token);
         return "Token is valid";
     }
 
+    @PreAuthorize("@AuthService.hasRole(authentication)")
     @GetMapping("/testuser")
     public String testRole(){
         return "Hello user";

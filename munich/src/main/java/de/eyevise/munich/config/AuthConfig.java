@@ -9,6 +9,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,12 +23,13 @@ public class AuthConfig {
     public UserDetailsService userDetailsService(){
         return new CustomUserDetailsService();
     }
+
+    /**
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/auth/register", "/auth/token","/auth/validate/{token}").permitAll()
-                        .requestMatchers("/auth/testuser").hasRole("user")
+                        .requestMatchers("/auth/register", "/auth/token","/auth/validate","/auth/testuser").permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(request -> {
@@ -39,6 +41,18 @@ public class AuthConfig {
                 }));
 
         return http.build();
+    }**/
+
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth->{
+            auth.requestMatchers("/auth/register", "/auth/token","/auth/validate","/auth/testuser").permitAll();
+            auth.anyRequest().permitAll();
+        }).build();
+
+
     }
 
     @Bean

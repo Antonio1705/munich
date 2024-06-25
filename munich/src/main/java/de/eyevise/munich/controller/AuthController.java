@@ -28,9 +28,9 @@ public class AuthController {
 
     @GetMapping("/token")
     public String getToken(@RequestBody AuthRequestDto authRequestDto){
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getName(), authRequestDto.getPassword()));
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getEmail(), authRequestDto.getPassword()));
         if (authenticate.isAuthenticated()){
-            return authService.generateToken(authRequestDto.getName());
+            return authService.generateToken(authRequestDto.getEmail());
         }
         throw new RuntimeException("invalid access");
 
@@ -43,7 +43,7 @@ public class AuthController {
         return "Token is valid";
     }
 
-    @PreAuthorize("@AuthService.hasRole(authentication)")
+
     @GetMapping("/testuser")
     public String testRole(){
         return "Hello user";

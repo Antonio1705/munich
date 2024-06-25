@@ -36,4 +36,8 @@ public class AuthService {
     public void validateToken(String token) {
         jwtService.validateToken(token);
     }
+
+    public boolean hasRole(){
+        return true;
+    }
 }
